@@ -1,14 +1,16 @@
 import React from 'react'
-import './toDoList.module.scss'
+import styles from './toDoList.module.scss'
 import TaskInput from '../TaskInput'
 import TaskList from '../TaskList'
 
 const TodoList = () => {
   return (
-    <div>
-      ToDoList
-      <TaskInput />
-      <TaskList />
+    <div className={styles.todoList}>
+      <div className={styles.todoListContainer}>
+        <TaskInput />
+        <TaskList />
+        <TaskList />
+      </div>
     </div>
   )
 }
