@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from './toDoList.module.scss'
 import TaskInput from '../TaskInput'
 import TaskList from '../TaskList'
@@ -6,11 +6,15 @@ import { Todo } from '../../@types/todo.type'
 
 const TodoList = () => {
   const [todos, setTodos] = useState<Todo[]>([])
-
   const [currentTodo, setCurrentTodo] = useState<Todo | null>(null)
-
   const completed = todos.filter((todo) => todo.done)
   const incomplete = todos.filter((todo) => !todo.done)
+
+  useEffect(() => {
+    const todosString = localStorage.getItem('todos')
+    const todosObj: Todo[] = JSON.parse(todosString || '[]')
+    setTodos(todosObj)
+  }, [])
 
   const addTodo = (name: string) => {
     const todo: Todo = {
@@ -19,6 +23,11 @@ const TodoList = () => {
       id: new Date().toISOString()
     }
     setTodos((prev) => [...prev, todo])
+
+    const todosString = localStorage.getItem('todos')
+    const todosObj: Todo[] = JSON.parse(todosString || '[]')
+    const newTodosObj = [...todosObj, todo]
+    localStorage.setItem('todos', JSON.stringify(newTodosObj))
   }
 
   const handleDoneTodo = (id: string, done: boolean) => {
