@@ -11,9 +11,16 @@ const TodoList = () => {
   const incomplete = todos.filter((todo) => !todo.done)
 
   useEffect(() => {
-    const todosString = localStorage.getItem('todos')
-    const todosObj: Todo[] = JSON.parse(todosString || '[]')
-    setTodos(todosObj)
+    if (todos.length > 0) {
+      localStorage.setItem('todos', JSON.stringify(todos))
+    }
+  }, [todos])
+
+  useEffect(() => {
+    const storedTodos = localStorage.getItem('todos')
+    if (storedTodos) {
+      setTodos(JSON.parse(storedTodos))
+    }
   }, [])
 
   const addTodo = (name: string) => {
@@ -23,11 +30,6 @@ const TodoList = () => {
       id: new Date().toISOString()
     }
     setTodos((prev) => [...prev, todo])
-
-    const todosString = localStorage.getItem('todos')
-    const todosObj: Todo[] = JSON.parse(todosString || '[]')
-    const newTodosObj = [...todosObj, todo]
-    localStorage.setItem('todos', JSON.stringify(newTodosObj))
   }
 
   const handleDoneTodo = (id: string, done: boolean) => {
@@ -78,9 +80,13 @@ const TodoList = () => {
       }
       return prev
     })
+    localStorage.clear()
   }
 
-  console.log(todos)
+  console.log(todos.length)
+  console.log(JSON.stringify(todos))
+  console.log(localStorage.getItem('todos'))
+
   return (
     <div className={styles.todoList}>
       <div className={styles.todoListContainer}>
